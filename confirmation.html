@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Congratulations!</h1>
+        <button onclick="window.location.href='index.html'">Home</button>
+    </header>
+    <main>
+        <h2>Your Order has been Placed!</h2>
+        <div id="orderedItems"></div>
+    </main>
+    <script>
+        const orderedItems = JSON.parse(localStorage.getItem('orderedItems'));
+        const orderedItemsDiv = document.getElementById('orderedItems');
+        if (orderedItems) {
+            orderedItemsDiv.innerHTML = orderedItems.map(item => `<p>${item.title} (x${item.count})</p>`).join('');
+        } else {
+            orderedItemsDiv.innerHTML = "<p>No items ordered.</p>";
+        }
+    </script>
+</body>
+</html>

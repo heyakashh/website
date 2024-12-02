@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Checkout</h1>
+        <button onclick="window.location.href='index.html'">Home</button>
+    </header>
+    <main>
+        <div id="cartItems"></div>
+        <h2>Enter Your Details</h2>
+        <form id="checkoutForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" required>
+            <label for="address">Billing Address:</label>
+            <input type="text" id="address" required>
+            <label for="paymentMode">Payment Mode:</label>
+            <select id="paymentMode" required>
+                <option value="COD">Cash on Delivery</option>
+            </select>
+            <button type="submit">Complete Purchase</button>
+        </form>
+    </main>
+    <script>
+        const cartItemsDiv = document.getElementById('cartItems');
+
+        function loadCart() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            if (cart.length === 0) {
+                cartItemsDiv.innerHTML = "<p>Your cart is empty.</p>";
+                return;
+            }
+            cartItemsDiv.innerHTML = cart.map(item => `
+                <div>
+                    <p>${item.title} (x${item.count})</p>
+                    <button onclick="removeOne('${item.title}')">Remove One</button>
+                </div>
+            `).join('');
+        }
+
+        function removeOne(title) {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartItem = cart.find(item => item.title === title);
+            if (cartItem) {
+                cartItem.count--;
+                if (cartItem.count <= 0) {
+                    const index = cart.indexOf(cartItem);
+                    cart.splice(index, 1);
+                }
+                localStorage.setItem('cart', JSON.stringify(cart));
+                loadCart();
+            }
+        }
+
+        document.getElementById('checkoutForm').onsubmit = (event) => {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const address = document.getElementById('address').value;
+            const paymentMode = document.getElementById('paymentMode').value;
+
+            if (paymentMode === "COD") {
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                localStorage.setItem('orderedItems', JSON.stringify(cart));
+                localStorage.removeItem('cart');
+                alert('Order placed successfully!');
+                window.location.href = "confirmation.html";
+            } else {
+                alert('Please select Cash on Delivery as payment mode.');
+            }
+        };
+
+        loadCart();
+    </script>
+</body>
+</html>
