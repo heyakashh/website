@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation</title>
+    <style>
+        body {
+            background-color: #800090; /* Purple background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+        }
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #800080;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .error {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .form-group input.error-input {
+            border-color: red;
+        }
+        button {
+            background-color: #800080;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            width: 100%;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #6a006a;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Form Validation</h2>
+        <form id="form">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" placeholder="Enter your full name">
+                <div class="error" id="nameError"></div>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="Enter your email address">
+                <div class="error" id="emailError"></div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password">
+                <div class="error" id="passwordError"></div>
+            </div>
+            <div class="form-group">
+                <label for="dob">Birth Date</label>
+                <input type="date" id="dob">
+                <div class="error" id="dobError"></div>
+            </div>
+            <div class="form-group">
+                <label>Gender</label>
+                <input type="radio" id="male" name="gender" value="Male"> Male
+                <input type="radio" id="female" name="gender" value="Female"> Female
+                <div class="error" id="genderError"></div>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="successMessage" style="display: none; text-align: center; color: green; margin-top: 15px;">
+            Thank you for submitting the form!
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('form');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const dobInput = document.getElementById('dob');
+        const genderInputs = document.getElementsByName('gender');
+        const successMessage = document.getElementById('successMessage');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            let isValid = true;
+
+            // Name Validation
+            if (nameInput.value.trim() === '') {
+                isValid = false;
+                showError('nameError', 'Name is required');
+                addErrorStyle(nameInput);
+            } else {
+                hideError('nameError');
+                removeErrorStyle(nameInput);
+            }
+
+            // Email Validation
+            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            if (!emailPattern.test(emailInput.value.trim())) {
+                isValid = false;
+                showError('emailError', 'Enter a valid email address');
+                addErrorStyle(emailInput);
+            } else {
+                hideError('emailError');
+                removeErrorStyle(emailInput);
+            }
+
+            // Password Validation
+            if (passwordInput.value.trim().length < 6) {
+                isValid = false;
+                showError('passwordError', 'Password must be at least 6 characters long');
+                addErrorStyle(passwordInput);
+            } else {
+                hideError('passwordError');
+                removeErrorStyle(passwordInput);
+            }
+
+            // Date of Birth Validation
+            if (dobInput.value === '') {
+                isValid = false;
+                showError('dobError', 'Date of Birth is required');
+                addErrorStyle(dobInput);
+            } else {
+                hideError('dobError');
+                removeErrorStyle(dobInput);
+            }
+
+            // Gender Validation
+            let isGenderSelected = false;
+            for (const genderInput of genderInputs) {
+                if (genderInput.checked) {
+                    isGenderSelected = true;
+                    break;
+                }
+            }
+            if (!isGenderSelected) {
+                isValid = false;
+                showError('genderError', 'Please select a gender');
+            } else {
+                hideError('genderError');
+            }
+
+            // Show success message if the form is valid
+            if (isValid) {
+                form.style.display = 'none';
+                successMessage.style.display = 'block';
+            }
+        });
+
+        function showError(id, message) {
+            document.getElementById(id).textContent = message;
+        }
+
+        function hideError(id) {
+            document.getElementById(id).textContent = '';
+        }
+
+        function addErrorStyle(input) {
+            input.classList.add('error-input');
+        }
+
+        function removeErrorStyle(input) {
+            input.classList.remove('error-input');
+        }
+    </script>
+</body>
+</html>

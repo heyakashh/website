@@ -1,0 +1,92 @@
+width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        .form-content {
+            background-color: #00e9c2;
+            padding: 20px;
+            border-radius: 8px;
+            width: 350px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .form-content input, .form-content textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            color: #000;
+        }
+        .form-content button {
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+            color: white;
+            background-color: #000;
+            border-radius: 5px;
+        }
+        .form-content button:hover {
+            background-color: #f0b606;
+        }
+    </style>
+
+    <!-- JavaScript -->
+    <script>
+        // Show Popup
+        function showPopup() {
+            document.getElementById('popup-form').style.display = 'flex';
+        }
+
+        // Close Popup
+        function closePopup() {
+            document.getElementById('popup-form').style.display = 'none';
+        }
+
+        // Add New Book
+        function addBook() {
+            // Get input values
+            const title = document.getElementById('book-title').value;
+            const author = document.getElementById('book-author').value;
+            const description = document.getElementById('book-desc').value;
+
+            if (title && author && description) {
+                // Create a new book card
+                const bookCard = document.createElement('div');
+                bookCard.classList.add('book-card');
+
+                bookCard.innerHTML = 
+                    <div class="book-content">
+                        <h2 class="book-title">${title}</h2>
+                        <h4 class="book-author">${author}</h4>
+                        <p>${description}</p>
+                    </div>
+                    <div class="button-container">
+                        <button class="delete-btn" onclick="deleteBook(event)">Delete</button>
+                    </div>
+                ;
+
+                // Append the new book card to the container
+                document.getElementById('books-container').appendChild(bookCard);
+
+                // Clear input fields
+                document.getElementById('book-title').value = '';
+                document.getElementById('book-author').value = '';
+                document.getElementById('book-desc').value = '';
+
+                // Close popup
+                closePopup();
+            } else {
+                alert('Please fill in all fields.');
+            }
+        }
+
+        // Delete Book
+        function deleteBook(event) {
+            event.target.closest('.book-card').remove();
+        }
+    </script>
+</body>
+</html>
